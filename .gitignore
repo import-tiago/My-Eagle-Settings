@@ -11,6 +11,7 @@
 *.b$?
 *.s$?
 *.l$?
+*.bak
 
 # Eagle project file
 # It contains a serial number and references to the file structure
@@ -53,5 +54,7 @@
 
 # file locks introduced since 7.x
 *.lck
+
+*.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/eagle

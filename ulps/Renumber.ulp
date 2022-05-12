@@ -1,4 +1,4 @@
-#usage "<b>Renumber the parts of a schematic</b><p>"
+#usage "<b>Automatic parts renumber</b> - v5.0.1\n<p>"
        "1 step:<br>This version checks of empty prefix in deviceset, and check if the deviceset prefix even used prefix.<br>"
        "2 step:<br>If not set a prefix in used deviceset, you can select a device to open the device of library to correct the prefix.<br>"
        "3 step:<br>Option to update the library<br>"

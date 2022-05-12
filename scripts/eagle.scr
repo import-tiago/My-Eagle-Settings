@@ -3,7 +3,6 @@
 
 ############## GLOBAL Instructions ##############
 #Assign GLOBAL workspace specific hotkeys
-ASSIGN F7 'NAME';
 
 
 ############## SCHEMATIC EDITOR specific Instructions ##############
@@ -24,7 +23,8 @@ ASSIGN F6 'Name';
 ASSIGN F7 'Value';
 ASSIGN A+F1 'Show';
 ASSIGN C+F 'RUN find.ulp';
-ASSIGN C+B 'RUN bom-ex.ulp';
+ASSIGN C+B 'RUN BoM.ulp';
+ASSIGN C+R 'RUN Renumber.ulp';
 
 
 #add layers
@@ -70,10 +70,12 @@ ASSIGN C+F 'RUN find.ulp';
 SET PALETTE BLACK; #Defines the 'white palatte' as default colors palette
 
 #SET COLOR_LAYER <layer> <color palette id>
-SET COLOR_LAYER 1  4;  #TOP Layer
-SET COLOR_LAYER 16 46; #BOTTOM Layer
+SET COLOR_LAYER 1  59; #TOP Layer
+SET COLOR_LAYER 2  21; #Layer 2
+SET COLOR_LAYER 15 48; #Layer 3
+SET COLOR_LAYER 16 38; #BOTTOM Layer
 SET COLOR_LAYER 17 10; #Pads
-SET COLOR_LAYER 18  9; #Vias
+SET COLOR_LAYER 18 31; #Vias
 SET COLOR_LAYER 19 58; #Unrouted Wires
 SET COLOR_LAYER 20 13; #Dimension
 SET COLOR_LAYER 21 16; #tPlace 

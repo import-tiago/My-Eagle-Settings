@@ -212,6 +212,8 @@
 // 1.69 RES  02/08/18 Removed automatically added XREF column field.
 //                    Added sorted output for BOM save files
 //
+// 1.70		 12/05/22 Changed deafult Part Number attribute from PARTNO to PN (by Tiago Silva)
+//
 //////////////////////////////////////////////////////////////////////////////
 //
 // THIS PROGRAM IS PROVIDED AS IS AND WITHOUT WARRANTY OF ANY KIND,
@@ -221,7 +223,7 @@
 
 #require 6.5100
 
-#usage "en: <b>Export a Bill Of Material</b> - v1.69\n"
+#usage "en: <b>Automatic bill of materials generator</b> - v1.70\n"
 "<p>"
 "Generates a project's <i>Bill Of Material</i>."
 "<p>"
@@ -348,7 +350,7 @@ string HelpTextEN =
 //////////////////////////////////////////////////////////////////////////////
 //
 
-string strVersion = "1.69";
+string strVersion = "1.70";
 
 int nPartCount;
 int nBOMCount;
@@ -1349,21 +1351,21 @@ void EditPartEntry(string partname) {
 			{
 				dlgGroup("Edit Part Number") {
 					dlgGridLayout
-					{
-						dlgCell(0, 0) dlgLabel("Part Name:");
-						dlgCell(0, 1) dlgLabel(partname);
+					{			
+							dlgCell(0, 0) dlgLabel("Part Name:");
+							dlgCell(0, 1) dlgLabel(partname);
+							
+							dlgCell(1, 0) dlgLabel("Part Number:");
+							dlgCell(1, 1) dlgStringEdit(PickPartNum);
 
-						dlgCell(1, 0) dlgLabel("Part Value:");
-						dlgCell(1, 1) dlgStringEdit(PickPartVal);
+							dlgCell(2, 0) dlgLabel("Part Value:");
+							dlgCell(2, 1) dlgStringEdit(PickPartVal);
 
-						dlgCell(2, 0) dlgLabel("Part Device:");
-						dlgCell(2, 1) dlgStringEdit(PickPartDev);
+							dlgCell(3, 0) dlgLabel("Part Device:");
+							dlgCell(3, 1) dlgStringEdit(PickPartDev);
 
-						dlgCell(3, 0) dlgLabel("Part Package:");
-						dlgCell(3, 1) dlgLabel(PartPkg[ndx]);
-
-						dlgCell(4, 0) dlgLabel("Part Number:");
-						dlgCell(4, 1) dlgStringEdit(PickPartNum);
+							dlgCell(4, 0) dlgLabel("Part Package:");
+							dlgCell(4, 1) dlgLabel(PartPkg[ndx]);
 					}
 				}
 				dlgVBoxLayout
@@ -3408,7 +3410,7 @@ void OnVariantComboChange() {
 }
 
 int AppDialog() {
-	int rtn = dlgDialog("BOM-EX v" + strVersion) {
+	int rtn = dlgDialog("Bill of Materials v" + strVersion) {
 		// Set the default view width
 		dlgHBoxLayout dlgSpacing(WindowMinWidth);
 

@@ -119,6 +119,26 @@ ASSIGN F1 'Group';
 ASSIGN F2 'Move';
 ASSIGN F3 'Delete';
 
+#add layers
+LAYER 135 INFO_1;
+LAYER 136 INFO_2;
+LAYER 137 INFO_3;
+LAYER 138 INFO_4;
+LAYER 139 INFO_5;
+LAYER 140 INFO_6;
+LAYER 141 INFO_7;
+LAYER 142 INFO_8;
+
+SET COLOR_LAYER 135 49; #Light black color from white palette
+SET COLOR_LAYER 136 9;  #Purple color from white palette
+SET COLOR_LAYER 137 1;  #Blue color from white palette
+SET COLOR_LAYER 138 23; #Orange color from white palette
+SET COLOR_LAYER 139 14; #Yellow color from white palette
+SET COLOR_LAYER 140 12; #Red color from white palette
+SET COLOR_LAYER 141 13; #Pink color from white palette
+SET COLOR_LAYER 142 19; #Green color from white palette
+
+
 
 ############## DEVICE EDITOR specific Instructions ##############
 DEV:
@@ -129,6 +149,25 @@ ASSIGN F1 'Group';
 ASSIGN F2 'Move';
 ASSIGN F3 'Delete';
 
+#add layers
+LAYER 135 INFO_1;
+LAYER 136 INFO_2;
+LAYER 137 INFO_3;
+LAYER 138 INFO_4;
+LAYER 139 INFO_5;
+LAYER 140 INFO_6;
+LAYER 141 INFO_7;
+LAYER 142 INFO_8;
+
+SET COLOR_LAYER 135 49; #Light black color from white palette
+SET COLOR_LAYER 136 9;  #Purple color from white palette
+SET COLOR_LAYER 137 1;  #Blue color from white palette
+SET COLOR_LAYER 138 23; #Orange color from white palette
+SET COLOR_LAYER 139 14; #Yellow color from white palette
+SET COLOR_LAYER 140 12; #Red color from white palette
+SET COLOR_LAYER 141 13; #Pink color from white palette
+SET COLOR_LAYER 142 19; #Green color from white palette
+
 
 ############## SYMBOL EDITOR specific Instructions ##############
 SYM:
@@ -138,6 +177,25 @@ Grid alt inch 0.0125;
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';
 ASSIGN F3 'Delete';
+
+#add layers
+LAYER 135 INFO_1;
+LAYER 136 INFO_2;
+LAYER 137 INFO_3;
+LAYER 138 INFO_4;
+LAYER 139 INFO_5;
+LAYER 140 INFO_6;
+LAYER 141 INFO_7;
+LAYER 142 INFO_8;
+
+SET COLOR_LAYER 135 49; #Light black color from white palette
+SET COLOR_LAYER 136 9;  #Purple color from white palette
+SET COLOR_LAYER 137 1;  #Blue color from white palette
+SET COLOR_LAYER 138 23; #Orange color from white palette
+SET COLOR_LAYER 139 14; #Yellow color from white palette
+SET COLOR_LAYER 140 12; #Red color from white palette
+SET COLOR_LAYER 141 13; #Pink color from white palette
+SET COLOR_LAYER 142 19; #Green color from white palette
 
 
 ############## PACKAGE EDITOR specific Instructions ##############
@@ -153,5 +211,25 @@ SET COLOR_LAYER 21 16; #tPlace
 SET COLOR_LAYER 22 40; #bPlace
 SET COLOR_LAYER 51 23; #tDocu
 SET COLOR_LAYER 52 47; #bDocu
+
+
+#add layers
+LAYER 135 INFO_1;
+LAYER 136 INFO_2;
+LAYER 137 INFO_3;
+LAYER 138 INFO_4;
+LAYER 139 INFO_5;
+LAYER 140 INFO_6;
+LAYER 141 INFO_7;
+LAYER 142 INFO_8;
+
+SET COLOR_LAYER 135 49; #Light black color from white palette
+SET COLOR_LAYER 136 9;  #Purple color from white palette
+SET COLOR_LAYER 137 1;  #Blue color from white palette
+SET COLOR_LAYER 138 23; #Orange color from white palette
+SET COLOR_LAYER 139 14; #Yellow color from white palette
+SET COLOR_LAYER 140 12; #Red color from white palette
+SET COLOR_LAYER 141 13; #Pink color from white palette
+SET COLOR_LAYER 142 19; #Green color from white palette
 
 DISPLAY ALL

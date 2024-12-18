@@ -67,31 +67,31 @@ ASSIGN F6 'Ripup @;';
 ASSIGN A+F1 'Show';
 ASSIGN C+F 'RUN find.ulp'; 
 
-SET PALETTE BLACK; #Defines the 'white palatte' as default colors palette
+SET PALETTE BLACK;
 
 #SET COLOR_LAYER <layer> <color palette id>
-SET COLOR_LAYER 1  59; #TOP Layer
+SET COLOR_LAYER 1  29; #TOP Layer
 SET COLOR_LAYER 2  21; #Layer 2
 SET COLOR_LAYER 15 48; #Layer 3
-SET COLOR_LAYER 16 38; #BOTTOM Layer
+SET COLOR_LAYER 16 62; #BOTTOM Layer
 SET COLOR_LAYER 17 10; #Pads
 SET COLOR_LAYER 18 31; #Vias
-SET COLOR_LAYER 19 58; #Unrouted Wires
+SET COLOR_LAYER 19 39; #Unrouted Wires
 SET COLOR_LAYER 20 13; #Dimension
 SET COLOR_LAYER 21 16; #tPlace 
 SET COLOR_LAYER 22 40; #bPlace
 SET COLOR_LAYER 23 61; #tOrigins
 SET COLOR_LAYER 24 61; #bOrigins
-SET COLOR_LAYER 25 14; #tNames
-SET COLOR_LAYER 26 14; #bNames
+SET COLOR_LAYER 25 30; #tNames
+SET COLOR_LAYER 26 32; #bNames
 SET COLOR_LAYER 27 48; #tValues
 SET COLOR_LAYER 28 48; #bValues
 SET COLOR_LAYER 51 23; #tDocu
 SET COLOR_LAYER 52 47; #bDocu
 
-DISPLAY none; DISPLAY 1 16 17 18 19 20 21 22 23 24; # When opening, hide all layers, then show specific ones
+DISPLAY none; DISPLAY 1 16 17 18 19 20 21 22 23 24 25 26; # When opening, hide all layers, then show these specific ones
 
-MENU 'TOP : DISPLAY None 1 17 18 19 20 21 23;' 'BOTTOM : DISPLAY None 16 17 18 19 20 22 24;' 'DEFAULT : DISPLAY None 1 16 17 18 19 20 21 22 23 24;';
+MENU 'TOP : DISPLAY None 1 17 18 19 20 21 23;' 'BOTTOM : DISPLAY None 16 17 18 19 20 22 24;' 'DEFAULT : DISPLAY None 1 16 17 18 19 20 21 22 23 24 25 26;';
 
 
 
@@ -113,7 +113,7 @@ Change Width 10; #Routing width default to 10mil
 ############## LIBRARY EDITOR specific Instructions ##############
 LBR:
 Grid inch 0.025 off; #grid lines off
-Grid alt inch 0.0125;
+Grid alt inch 0.001;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';
@@ -201,7 +201,7 @@ SET COLOR_LAYER 142 19; #Green color from white palette
 ############## PACKAGE EDITOR specific Instructions ##############
 PAC:
 Grid inch 0.05 on;
-Grid alt inch 0.00625;
+Grid alt mil 1;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';

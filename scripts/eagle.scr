@@ -171,7 +171,7 @@ SET COLOR_LAYER 142 19; #Green color from white palette
 
 ############## SYMBOL EDITOR specific Instructions ##############
 SYM:
-GRID mil 25 off; #GRID lines off
+GRID mil 25 on;
 GRID alt mil 12.5;
 
 ASSIGN F1 'Group';

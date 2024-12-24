@@ -370,8 +370,7 @@ string CheckNames(void) {
       }
       Error +=  "# Collision of symbol name and device name (eg. Frames, Supply ...)\n";
       sprintf(h, "# Rename PREFIX of Device %s at (%.4f %.4f) - sheet %d before renaming %s at (%.4f %.4f) - sheet %d';\n",
-                              SymNames[xx], SymX[xx] / 1000.0, SymY[xx] / 1000.0, symsh[xx],
-                              OldNames[s], x[s] / 1000.0, y[s] / 1000.0, Sheet[s] );
+                              SymNames[xx], SymX[xx] / 1000.0, SymY[xx] / 1000.0, symsh[xx], OldNames[s], x[s] / 1000.0, y[s] / 1000.0, Sheet[s] );
       Error += h;
     }
   }
@@ -617,7 +616,7 @@ if (schematic) {
           // 2013-03-19 int n = GetNumberIndex(P.name);
           // 2013-03-19if (n > 0) {
           
-            if (P.device.package || RenumWithoutPackage) {  // **** only Devices with Packages
+            if (P.device.package /*|| RenumWithoutPackage */) {  // **** only Devices with Packages
                                                             // **** without Supply symbol Frames ect...
               
               // **** DO NOT RENUMBER Elements with this PREFIX
@@ -690,7 +689,8 @@ if (schematic) {
     GenerateScript();
 
     if (CheckNames()) {
-      int select;
+      
+	  int select;
       dlgDialog("Symbol ref Device Names") {
         dlgVBoxLayout {
           dlgLabel("Warnings for renumber!");
@@ -705,6 +705,7 @@ if (schematic) {
         }
       };
       exit (-1);
+	  
     }
 
     sprintf(c, "GRID INCH 0.1;\n");

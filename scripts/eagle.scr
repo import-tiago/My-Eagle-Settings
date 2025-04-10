@@ -9,9 +9,9 @@
 SCH:
 SET PALETTE WHITE; #Defines the 'white palatte' as default colors palette
 
-#SETUP Grid
-Grid inch 0.025 off; #grid lines off
-Grid alt inch 0.0125;
+#SETUP GRID
+GRID mil 25 off; #GRID lines off
+GRID alt mil 12.5;
 
 #Assign SCH workspace specific hotkeys
 ASSIGN F1 'Group';
@@ -112,8 +112,8 @@ Change Width 10; #Routing width default to 10mil
 
 ############## LIBRARY EDITOR specific Instructions ##############
 LBR:
-Grid inch 0.025 off; #grid lines off
-Grid alt inch 0.001;
+GRID mil 25 off; #GRID lines off
+GRID alt mil 1;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';
@@ -142,8 +142,8 @@ SET COLOR_LAYER 142 19; #Green color from white palette
 
 ############## DEVICE EDITOR specific Instructions ##############
 DEV:
-Grid inch 0.05 on;
-Grid alt inch 0.0125;
+GRID mil 5 on;
+GRID alt mil 12.5;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';
@@ -171,8 +171,8 @@ SET COLOR_LAYER 142 19; #Green color from white palette
 
 ############## SYMBOL EDITOR specific Instructions ##############
 SYM:
-Grid inch 0.05 off; #grid lines off
-Grid alt inch 0.0125;
+GRID mil 25 on;
+GRID alt mil 12.5;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';
@@ -200,8 +200,8 @@ SET COLOR_LAYER 142 19; #Green color from white palette
 
 ############## PACKAGE EDITOR specific Instructions ##############
 PAC:
-Grid inch 0.05 on;
-Grid alt mil 1;
+GRID mil 5 on;
+GRID alt mil 1;
 
 ASSIGN F1 'Group';
 ASSIGN F2 'Move';

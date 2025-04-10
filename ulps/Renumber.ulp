@@ -71,7 +71,7 @@ string DevPrefix[];
 string DevName[];
 string SymDevName[];
 
-int    RenumWithoutPackage = 1; // 2013-03-19
+int    RenumWithoutPackage = 0; // 2013-03-19
 string NoPrefixRenumber = "TP"; // Prefix do not renumber Testpoints
 
 int    ckx[], cky[], cksh[];

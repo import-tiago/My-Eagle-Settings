@@ -34,6 +34,29 @@ Autodesk EAGLE - Set of utilities, scripts, ULPs and other useful things for my 
 2. Adjust **ignored prefixes** and **part number key fields** if needed.  
 3. Click **"Export"** to generate a styled Excel `.xlsx`.
 
+## 📝 Add Attributes for a Complete BOM
+
+To include project metadata (like COMPANY, PROJECT, and VERSION) in the exported Excel BOM, make sure to define these attributes in your Eagle schematic:
+
+### ✅ Required Attributes
+
+- `COMPANY` – Your company or organization name
+- `PROJECT` – Project name (also used as default Excel file name)
+- `VERSION` – Hardware or schematic version
+
+### 📌 How to Add in Eagle
+
+1. Open your schematic in Eagle
+2. Go to **Edit → Attributes...**
+3. Click **New** to add each attribute:
+   - `Name`: `COMPANY`, `PROJECT`, or `VERSION`
+   - `Value`: Fill with appropriate content
+4. Click **OK** to save
+
+Once added, QuickBOM will automatically extract these values into the BOM header when you export.
+
+![GlobalAttributes](https://github.com/user-attachments/assets/7fc87db8-6615-4f2e-992c-91b28f024626)
+
 ---
 
 ## 📦 Files in Release

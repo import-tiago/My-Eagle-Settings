@@ -1,0 +1,5 @@
+python310.zip
+.
+import site
+site.addsitedir(os.path.join(os.path.dirname(__file__), 'Lib'))
+site.addsitedir(os.path.join(os.path.dirname(__file__), 'tcl'))

@@ -1,0 +1,61 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+/**
+ * Should prepare bom, (receive images), schematics object
+ *
+ * @return int -1 just close it on success
+ */
+int prepareBOM() {
+    if (schematic) {
+        schematic(sch) {
+            string name = getSchematicName(sch);
+			name = urlEncode(name);
+            string path;
+            sprintf(path, "%s%s.xml", EAGLE_FILES_PATH, name);
+
+            output(path) {
+                xmlDocument();
+                addSchematic(sch, name);
+            }
+
+            string command;
+            sprintf(command, "%s \"%s%s\" -action checkAuth", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER);
+            int result = system(command);
+            if (result != 0) {
+                exit(-1);
+            }
+
+            if (strlen(libCommand) > 5) {
+                libCommand += "RUN openbom sendBOM '"+ path +"';";
+                libCommand += "CLOSE;";
+                exit(libCommand);
+            }
+
+            libCommand += "RUN openbom sendBOM '"+ path +"';";
+            exit(libCommand);
+        }
+
+        return -1;
+    }
+    else
+    {
+        dlgMessageBox(NOT_SCHEMATICS, "+OK");
+        exit(-1);
+    }
+}
+
+/**
+ * Should grab all data and run python script to send BOM to OpenBOM
+ *
+ * @return int -1 just close it on success
+ */
+int processBOM() {
+    string command;
+    sprintf(command, "%s \"%s%s\" -action sendBOM -name \"%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, argv[2]);
+    return system(command);
+}

@@ -1,0 +1,29 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+string RESP_FILE = "resp.tmp";
+string LOCATE_FILE = "locate.tmp";
+
+int dayms = 86400;
+
+int Resolution = 150; // DPI
+string monochrome = "MONOCHROME";
+string filetype[] = {
+    ".bmp", // Windows-Bitmap-Datei
+    ".png", // Portable-Network-Graphics-Datei
+    ".pbm", // Portable-Bitmap-Datei
+    ".pgm", // Portable-Grayscale-Bitmap-Datei
+    ".ppm", // Portable-Pixelmap-Datei
+    ".xbm", // X-Bitmap-Datei
+    ".xpm", // X-Pixmap-Datei
+    ".tif"  // Tiff-Datei
+};
+
+string PYTHON = (getOperationSystem() == "MAC") ? "/usr/local/bin/python3" : path_ulp[0] + "/openbom/python-3.10.0-embed-amd64/pythonw";
+string EAGLE_PYTHON_PATH = path_ulp[0] + "/openbom/python/";
+string EAGLE_FILES_PATH = path_ulp[0] + "/openbom/resources/";
+string OpenBOM_HANDLER = "openbomHandler.py";

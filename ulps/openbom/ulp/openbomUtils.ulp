@@ -1,0 +1,51 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+/**
+ * Should return os name
+ *
+ *
+ * @return string os name
+ */
+string getOperationSystem() {
+  string os = "WINDOWS";
+  int discover = strstr(OS_SIGNATURE, "Windows");
+  if (discover < 0) {
+    discover = strstr(OS_SIGNATURE, "Linux");
+    if (discover < 0) {
+      os = "MAC";
+    }
+    else {
+      os = "LINUX";
+    }
+  }
+  return os;
+}
+
+/**
+ * Should replace substr in string
+ *
+ *
+ * @return updated string
+ */
+string stringReplace(string str, string search, string replace)
+{
+    int offset = 0;
+    while(strstr(str, search, offset) != -1)
+    {
+        int start = strstr(str, search, offset);
+        int end = start + strlen(search);
+        string str1 = strsub(str, 0, start);
+        string str2 = strsub(str, end);
+        
+        offset = strlen(str1) + strlen(replace);
+
+        str = str1 + replace + str2;
+    }
+
+    return str;
+}

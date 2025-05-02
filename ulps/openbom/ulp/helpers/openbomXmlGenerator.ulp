@@ -1,0 +1,319 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+// list of images
+int exportImagesCount = 0;
+string exportImages[];
+
+string strsubst(string source, string find, string replace) {
+    int start = 0;
+    string result = source;
+    while(1) {
+        int n = strstr(result, find, start);
+        if( n < 0 ) break;
+        result = strsub(result, 0, n) + replace + strsub(result, n + strlen(find));
+        start = n + strlen(replace);
+    }
+    return result;
+}
+
+void xmlDocument() {
+    printf("<?xml version=\"1.0\"?>\n");
+}
+
+void xmlElementBegin(string name) {
+    printf("<%s", name);
+}
+
+void xmlElementEnd() {
+    printf(">");
+}
+
+void xmlElementClose() {
+    printf("/>");
+}
+
+void xmlPairElementClose(string name) {
+    printf("</%s>", name);
+}
+
+void xmlAddAttributeString(string name, string value) {
+    value = strsubst(value, "&", "&amp;");
+    value = strsubst(value, "\"", "&quot;");
+    value = strsubst(value, "<", "&lt;");
+    value = strsubst(value, ">", "&gt;");
+
+    printf(" %s=\"%s\"", name, value);
+}
+
+void xmlAddAttributeInt(string name, int value) {
+    printf(" %s=\"%d\"", name, value);
+}
+
+void xmlAddAttributeBool(string name, int value) {
+    xmlAddAttributeString(name, value ? "true" : "false");
+}
+
+void xmlAddComment(string comment) {
+    printf("<!-- %s -->", comment);
+}
+
+int hasImagesForExport(string fileName) {
+    for(int i = 0; i < exportImagesCount; i++) {
+        if (exportImages[i] == fileName) {
+            return i;
+        }
+    }
+    exportImages[exportImagesCount] = fileName;
+    exportImagesCount++;
+    return -1;
+}
+
+void createDir(string imgFolder) {
+    string dir;
+    sprintf(dir, "%s \"%s%s\" -action makeDir -path \"%s/%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, EAGLE_FILES_PATH, imgFolder);
+    system(dir);
+}
+
+string urlEncode(string str){
+    string new_str = "";
+    char c;
+    int ic;
+    string bufHex;
+    int len = strlen(str);
+
+    for(int i=0; i<len; i++){
+        c = str[i];
+        ic = c;
+        if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~')
+            new_str += c;
+        else {
+            sprintf(bufHex,"%X",c);
+            if(ic < 16)
+                new_str += "%0";
+            else
+                new_str += "%";
+            new_str += bufHex;
+        }
+    }
+    return new_str;
+ }
+
+
+void commandGenerateImage(string fileName, string imgFolder) {
+    string path;
+    string command;
+    if (hasImagesForExport(fileName) != -1) {
+        return;
+    }
+
+    string name = urlEncode(fileName);
+    //get full path to image and check if image is exists
+    string divider = (getOperationSystem() == "MAC") ? "/" : "\\\\";
+    sprintf(path, "%s%s%s%s%s", EAGLE_FILES_PATH, imgFolder, divider, name, filetype[1]);
+    if (filesize(path) != 0) {
+        return;
+    }
+
+    //trigger device info edit
+    sprintf(command, "EDIT '%s.fpt';\n", fileName);
+    libCommand += command;
+    //store image to folder
+    sprintf(command, "EXPORT IMAGE '%s' %s %d;\n", path, monochrome, Resolution);
+    libCommand += command;
+    return;
+}
+
+void commandGenerateImageByUrn(string fileName, string stringUrn, string imgFolder) {
+    string path;
+    string command;
+    if (hasImagesForExport(fileName) != -1) {
+        return;
+    }
+
+    string name = urlEncode(fileName);
+    //get full path to image and check if image is exists
+    string divider = (getOperationSystem() == "MAC") ? "/" : "\\\\";
+    sprintf(path, "%s%s%s%s%s", EAGLE_FILES_PATH, imgFolder, divider, name, filetype[1]);
+    if (filesize(path) != 0) {
+        return;
+    }
+
+    //trigger library open by urn
+    sprintf(command, "OPEN '%s';\n", stringUrn);
+    libCommand += command;
+    //edit footprint
+    sprintf(command, "EDIT '%s.pac';\n", fileName);
+    libCommand += command;
+    //store image to folder
+    sprintf(command, "EXPORT IMAGE '%s' %s %d;\n", path, monochrome, Resolution);
+    libCommand += command;
+    return;
+}
+
+void addDevice(UL_DEVICE d,  string imgFolder) {
+    string technologies[];
+    int technologies_count = strsplit(technologies, d.technologies, ' ');
+
+    xmlElementBegin("device");
+    xmlAddAttributeString("library", d.library);
+    xmlAddAttributeString("name", d.name);
+
+    if (d.package && d.package.libraryurn) {
+        xmlAddAttributeBool("hasImage", 1);
+        xmlAddAttributeString("package_library", d.package.library);
+        xmlAddAttributeString("package_library_urn", d.package.libraryurn);
+        xmlAddAttributeString("package_name", d.package.name);
+        commandGenerateImage(d.package.name, imgFolder);
+    }
+    else {
+        xmlAddAttributeBool("hasImage", 0);
+    }
+
+    if( d.description != "" ) xmlAddAttributeString("description", d.description);
+    if( d.headline != "" ) xmlAddAttributeString("headline", d.headline);
+    xmlAddAttributeString("prefix", d.prefix);
+    xmlAddAttributeString("technologies", d.technologies);
+    xmlElementEnd();
+
+    xmlPairElementClose("device");
+}
+
+void addPart(UL_PART part, string imgFolder) {
+    xmlElementBegin("part");
+    xmlAddAttributeString("part_name", part.name);
+    xmlAddAttributeString("value", part.value);
+    xmlAddAttributeString("name", part.device.name);
+    xmlAddAttributeString("package_name", part.device.package.name);
+
+    if (part.device && part.device.package && part.device.package.name && part.device.package.libraryurn) {
+        int tmp = part.device.libraryversion;
+        
+        xmlAddAttributeBool("hasImage", 1);
+        xmlAddAttributeString("footprinturn", part.device.footprint.urn);
+        xmlAddAttributeString("libraryurnurn", part.device.package.libraryurn);
+        commandGenerateImageByUrn(part.device.package.name, part.device.package.libraryurn, imgFolder);
+    }
+    else {
+        xmlAddAttributeBool("hasImage", 0);
+    }
+
+    xmlAddAttributeString("description", part.device.headline);
+    xmlElementEnd();
+
+    part.attributes(a) {
+        xmlElementBegin("attribute");
+        xmlAddAttributeString("name", a.name);
+        xmlAddAttributeString("value", a.value);
+        xmlElementClose();
+    }
+
+    xmlPairElementClose("part");
+}
+
+int addLibrary(UL_LIBRARY lib, string name) {
+    string imgFolder = name;
+
+    //create library xml obj
+    xmlElementBegin("library");
+    xmlAddAttributeString("name", lib.name);
+
+    if(lib.description != "")
+        xmlAddAttributeString("description", lib.description);
+    if(lib.headline != "")
+        xmlAddAttributeString("headline", lib.headline);
+
+    xmlAddAttributeString("version", EAGLE_SIGNATURE);
+    xmlElementEnd();
+
+    int itemsCount = 0;
+    //iterate devices from library
+    lib.devices(device) {
+        addDevice(device, name);
+        itemsCount++;
+    }
+
+    xmlPairElementClose("library");
+
+    createDir(name);
+	
+	return itemsCount;
+}
+
+void addSchematic(UL_SCHEMATIC sch, string name) {
+    string imgFolder = name;
+    //create library xml obj
+    xmlElementBegin("schematic");
+    xmlAddAttributeString("name", filename(sch.name));
+
+    if(sch.description != "")
+        xmlAddAttributeString("description", sch.description);
+    if(sch.headline != "")
+        xmlAddAttributeString("headline", sch.headline);
+
+    xmlAddAttributeString("version", EAGLE_SIGNATURE);
+    xmlElementEnd();
+
+    //iterate devices from library
+    int itemsCount = 0;
+    sch.allparts(part)
+    {
+        if (part.device.package && part.populate)
+        {
+            addPart(part, name);
+            itemsCount++;
+        }
+    }
+
+    if (itemsCount == 0) {
+        dlgMessageBox(BOM_IS_EMPTY, "+OK");
+        exit(-1);
+    }
+
+    xmlPairElementClose("schematic");
+
+    createDir(name);
+}
+
+string getFileNameWithoutExtension(string name, string extension) {
+    int pos = strrstr(name, extension);
+    if (pos >= 0) {
+        return strsub(name, 0, pos);
+    }
+    return name;
+}
+
+string getLibraryName(UL_LIBRARY lib) {
+    string name = filename(lib.name);
+    string extension = fileext(lib.name);
+    string libraryName = getFileNameWithoutExtension(name, extension);
+    if(lib.headline != "") {
+        xmlAddAttributeString("headline", lib.headline);
+        libraryName = lib.headline;
+    }
+    return libraryName;
+}
+
+string getSchematicName(UL_SCHEMATIC sch) {
+    string name = filename(sch.name);
+    string extension = fileext(sch.name);
+    string schematicName = getFileNameWithoutExtension(name, extension);
+    if(sch.headline != "") {
+        xmlAddAttributeString("headline", sch.headline);
+        schematicName = sch.headline;
+    }
+    return schematicName;
+}
+
+string getLibraryUrn(UL_LIBRARY lib) {
+	lib.devices(device) {
+		if (device.package) {
+			return device.package.libraryurn;
+		}
+    }
+	return "";
+}

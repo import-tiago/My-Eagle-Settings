@@ -1,0 +1,49 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+/**
+ * Should collect library items and images and call python script
+ *
+ * @return will exit on call next script or will exit with error message
+ */
+void prepareComponents() {
+	if(library)
+	{
+        library(lib) {
+            string name = getLibraryName(lib);
+			name = urlEncode(name);
+            string path;
+            sprintf(path, "%s%s.xml", EAGLE_FILES_PATH, name);
+            output(path) {
+                xmlDocument();
+                addLibrary(lib, name);
+            }
+
+            //back to library view
+            libCommand += "EDIT;";
+            libCommand += "RUN openbom sendCatalog '"+ path +"';";
+            exit(libCommand);
+        }
+    }
+    else
+    {
+        dlgMessageBox(NOT_LIBRARY, "+OK");
+        exit(-1);
+    }
+}
+
+
+/**
+ * Should grab all data and run python script to send Catalog to OpenBOM
+ *
+ * @return int -1 just close it on success
+ */
+int processComponent() {
+    string command;
+    sprintf(command, "%s \"%s%s\" -action sendCatalog -name \"%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, argv[2]);
+    return system(command);
+}

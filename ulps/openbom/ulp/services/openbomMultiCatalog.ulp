@@ -1,0 +1,73 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+/**
+ * Should prepare bom, (receive images), schematics object
+ *
+ * @return int -1 just close it on success
+ */
+int prepareMultiCatalog() {
+	
+    if (schematic) {
+		schematic(sch) {
+			string path;
+			sprintf(path, "%sallCatalogs.xml", EAGLE_FILES_PATH);
+			output(path) {
+				xmlDocument();
+				xmlElementBegin("catalog");
+				xmlElementEnd();
+				
+				int itemsCount = 0;
+				sch.libraries(lib) {
+
+					string urn = getLibraryUrn(lib);
+					if (strlen(urn) > 0) {
+						libCommand += "OPEN '"+ urn +"';";
+					}
+					
+					string name = getLibraryName(lib);
+					name = urlEncode(name);
+										
+					itemsCount += addLibrary(lib, name);
+				}
+				if (itemsCount == 0) {
+					dlgMessageBox(BOM_IS_EMPTY, "+OK");
+					exit(-1);
+				}				
+				xmlPairElementClose("catalog");
+			}
+			
+            if (strlen(libCommand) > 5) {
+                libCommand += "RUN openbom sendMultiCatalog '"+ path +"';";
+                libCommand += "CLOSE;";
+                exit(libCommand);
+            }
+
+			libCommand += "RUN openbom sendMultiCatalog '"+ path +"';";
+						
+			exit(libCommand);			
+		}
+		
+        return -1;
+    }
+    else
+    {
+        dlgMessageBox(NOT_SCHEMATICS, "+OK");
+        exit(-1);
+    }
+}
+
+/**
+ * Should grab all data and run python script to send BOM to OpenBOM
+ *
+ * @return int -1 just close it on success
+ */
+int processMultiCatalog() {
+    string command;
+    sprintf(command, "%s \"%s%s\" -action sendMultiCatalog -name \"%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, argv[2]);
+    return system(command);
+}

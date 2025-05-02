@@ -1,0 +1,32 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+/**
+ * Should receive link to BOM/Catalog by sourceId of object and open it in default browser
+ *
+ * @return int
+ */
+int locateBOM() {
+    string name = "";
+    string type = "";
+    if(library) {
+        type = "locateCatalog";
+        library(lib) {
+            name = getLibraryName(lib);
+        }
+    }
+    else if (schematic) {
+        type = "locateBOM";
+        schematic(sch) {
+            name = getSchematicName(sch);
+        }
+    }
+
+    string command;
+    sprintf(command, "%s \"%s%s\" -a %s -name \"%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, type, name);
+    return system(command);
+}

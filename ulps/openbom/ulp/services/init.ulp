@@ -1,0 +1,4 @@
+#include "openbomLocate.ulp"
+#include "openbomBOM.ulp"
+#include "openbomCatalog.ulp"
+#include "openbomMultiCatalog.ulp"

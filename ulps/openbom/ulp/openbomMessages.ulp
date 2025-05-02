@@ -1,0 +1,10 @@
+string OPENBOM = "OpenBOM";
+string GET_CATALOG = "Get catalog";
+string ERROR = "Error:";
+string BOM = "BOM";
+string NOT_SCHEMATICS = "! Open this Scheme from Schematic Editor";
+string NOT_LIBRARY = "! Open this ULP from library Editor";
+string CATALOG = "Catalog";
+string CATALOG_IS_EMPTY = "Library is empty";
+string BOM_IS_EMPTY = "Schematics is empty";
+string SYNC_RESOURCES_FAIL = "Resources sync failed.";

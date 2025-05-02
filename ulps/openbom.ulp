@@ -1,0 +1,124 @@
+#require 6.5100
+#usage "en: <b>Autodesk Eagle OpenBOM Extractor</b>\n"
+           "<p>"
+           "OpenBOM is an integrated Bill of Material and Inventory managament system"
+           "version 1.0.2151"
+           "<p>"
+           "<author>Author: support@openbom.com </author>"
+
+string libCommand;
+string login, password, token;
+
+#include "openbom/ulp/init.ulp"
+
+/**
+ * Should check python version
+ */
+void checkPython(){
+    string command;
+    sprintf(command, "%s --version 1.0.2151", PYTHON);
+    int result = system(command);
+    if (result != 0) {
+        dlgMessageBox("OpenBOM application required <a href=\"https://www.python.org/downloads/\">Python 3.5</a>.<br> Please install it and try again.");
+        exit(0);
+    }
+}
+
+/**
+ * Should fix images for main menu
+ */
+void fixResources() {
+    string os = getOperationSystem();
+    if (os == "MAC") {
+        system("cp -a "+EAGLE_FILES_PATH+"* "+EAGLE_DIR+"/bin/icons");
+    }
+    else if (os == "WINDOWS") {
+        string command = "";
+        sprintf(command, "%s \"%s%s\" -a fixResources -openbomResources \"%s*.png\" -eagleResources \"%s/bin/icons/\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, EAGLE_FILES_PATH, EAGLE_DIR);
+        if (system(command) != 0) {
+            dlgMessageBox(SYNC_RESOURCES_FAIL);
+        }
+    }
+}
+
+/**
+ * Should check if file exists
+ */
+int FileExists(string name)
+{
+    string files[];
+    return (fileglob(files, name) != 0);
+
+}
+
+/**
+ * Should check updates and add update button if updates available
+ */
+void checkUpdates() {
+    string command = "";
+    sprintf(command, "%s \"%s%s\" -a checkUpdates -scriptsPath \"%s\"", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER, path_scr[0]);
+    system(command);
+    if (FileExists(path_scr[0] + "/OpenBOMUpdate.scr") != 0) {
+        exit("SCRIPT OpenBOMUpdate");
+    }
+    
+}
+
+/**
+ * Main exec method. Will check arg and call specific functionnal
+ *
+ * @param argv script argument
+ * @return int
+ */
+void main() {
+    checkPython();
+
+    int dialogResult = 0;
+    string arg = argv[1];
+
+    if (arg == "locate") {
+        locateBOM();
+    }
+    else if (arg == "catalogexport") {
+        prepareComponents();
+    }
+    else if (arg == "sendCatalog") {
+        processComponent();
+    }
+    else if (arg == "singlebomexport") {
+         prepareBOM();
+    }
+    else if (arg == "sendBOM") {
+        processBOM();
+    }
+    else if (arg == "exportMultiCatalog") {
+        prepareMultiCatalog();
+    }
+    else if (arg == "sendMultiCatalog") {
+        processMultiCatalog();
+    }
+    else if (arg == "updateAddin") {
+        string command;
+        sprintf(command, "%s \"%s%s\" -action updateAddin", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER);
+        system(command);
+        exit("CLOSE;");
+    }
+    else if (arg == "settings") {
+        string command;
+        sprintf(command, "%s \"%s%s\" -action showSettingForm", PYTHON, EAGLE_PYTHON_PATH, OpenBOM_HANDLER);
+        system(command);
+    }
+    exit(0);
+}
+
+output(EAGLE_FILES_PATH + "output.txt", "wt") {
+    if (argv[1] == "init") {
+        fixResources();
+        exit(0);
+    }
+    if (argv[1] == "checkUpdates") {
+        checkUpdates();
+        exit(0);
+    }
+    main();
+}

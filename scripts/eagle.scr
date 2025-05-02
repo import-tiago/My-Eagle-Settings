@@ -1,235 +1,48 @@
-# Tiago Silva's Autodesk Eagle Startup Configuration Script 
-# This file is used to configure the editor windows.
+# Configuration Script
+#
+# This file can be used to configure the editor windows.
+#
+# Uncomment this if you want a set of useful default shortcuts!
+SCRIPT default-assign.scr;
+#
 
-############## GLOBAL Instructions ##############
-#Assign GLOBAL workspace specific hotkeys
-
-
-############## SCHEMATIC EDITOR specific Instructions ##############
-SCH:
-SET PALETTE WHITE; #Defines the 'white palatte' as default colors palette
-
-#SETUP GRID
-GRID mil 25 off; #GRID lines off
-GRID alt mil 12.5;
-
-#Assign SCH workspace specific hotkeys
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Delete';
-ASSIGN F4 'Net';
-ASSIGN F5 'Junction';
-ASSIGN F6 'Name';
-ASSIGN F7 'Value';
-ASSIGN A+F1 'Show';
-ASSIGN C+F 'RUN find.ulp';
-ASSIGN C+B 'RUN BoM.ulp';
-ASSIGN C+R 'RUN Renumber.ulp';
-
-
-#add layers
-LAYER 135 INFO_1;
-LAYER 136 INFO_2;
-LAYER 137 INFO_3;
-LAYER 138 INFO_4;
-LAYER 139 INFO_5;
-LAYER 140 INFO_6;
-LAYER 141 INFO_7;
-LAYER 142 INFO_8;
-
-SET COLOR_LAYER 135 49; #Light black color from white palette
-SET COLOR_LAYER 136 9;  #Purple color from white palette
-SET COLOR_LAYER 137 1;  #Blue color from white palette
-SET COLOR_LAYER 138 23; #Orange color from white palette
-SET COLOR_LAYER 139 14; #Yellow color from white palette
-SET COLOR_LAYER 140 12; #Red color from white palette
-SET COLOR_LAYER 141 13; #Pink color from white palette
-SET COLOR_LAYER 142 19; #Green color from white palette
-
-
-
-############## BOARD EDITOR specific Instructions ##############
 BRD:
-Change Dunit mil; 
-Grid mil 1 on;
-Grid alt mil .5;
+MENU '[bin/designlink.svg] Search and order : Run designlink-order.ulp -general;'\
+     '[bin/pcb-service.svg] PCB Service : Run pcb-service.ulp;'\
+;
+DISPLAY = 'Preset_Top' None 1 17 18 19 20 21 23 25 39 41 51;
+DISPLAY = 'Preset_Bottom' None 16 17 18 19 20 22 24 26 40 42 52;
+DISPLAY = 'Preset_Standard' None 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 39 40 41 42 51 52;
 
-DISPLAY = 'Preset_Top' None;
-DISPLAY = 'Preset_Bottom' None 16 17 18 19 20 22 24 26 40 42 45 52;
-DISPLAY = 'Preset_Standard' None 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 39 40 41 42 45 51 52;
+SCH:
+Grid Default;
+Change Width 0.006in;
+MENU '[bin/designlink.svg] Search and order {\
+                                          General : Run designlink-order.ulp -general; |\
+                                          Schematic : Run designlink-order.ulp; \
+                                          }'\
+;
+SCRIPT OpenBOM;
 
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Ripup';
-ASSIGN F4 'Route';
-ASSIGN F5 'Ratsnest';
-ASSIGN F6 'Ripup @;';
-ASSIGN A+F1 'Show';
-ASSIGN C+F 'RUN find.ulp'; 
-
-SET PALETTE BLACK;
-
-#SET COLOR_LAYER <layer> <color palette id>
-SET COLOR_LAYER 1  29; #TOP Layer
-SET COLOR_LAYER 2  21; #Layer 2
-SET COLOR_LAYER 15 48; #Layer 3
-SET COLOR_LAYER 16 62; #BOTTOM Layer
-SET COLOR_LAYER 17 10; #Pads
-SET COLOR_LAYER 18 31; #Vias
-SET COLOR_LAYER 19 39; #Unrouted Wires
-SET COLOR_LAYER 20 13; #Dimension
-SET COLOR_LAYER 21 16; #tPlace 
-SET COLOR_LAYER 22 40; #bPlace
-SET COLOR_LAYER 23 61; #tOrigins
-SET COLOR_LAYER 24 61; #bOrigins
-SET COLOR_LAYER 25 30; #tNames
-SET COLOR_LAYER 26 32; #bNames
-SET COLOR_LAYER 27 48; #tValues
-SET COLOR_LAYER 28 48; #bValues
-SET COLOR_LAYER 51 23; #tDocu
-SET COLOR_LAYER 52 47; #bDocu
-
-DISPLAY none; DISPLAY 1 16 17 18 19 20 21 22 23 24 25 26; # When opening, hide all layers, then show these specific ones
-
-MENU 'TOP : DISPLAY None 1 17 18 19 20 21 23;' 'BOTTOM : DISPLAY None 16 17 18 19 20 22 24;' 'LAYOUT : DISPLAY None 1 16 17 18 19 20 23 24;' 'DEFAULT : DISPLAY None 1 16 17 18 19 20 21 22 23 24 25 26;';
-
-
-
-
-
-Change ISOLATE 6; #minimum isolation value on flood plane
-Change Size 32; #Font size to start
-Change Align Center; #Font align to center
-Change Font Vector; #Make text on board in vector font
-Change Ratio 15;
-Set WIRE_BEND 1; #Route with 45 degree angles
-Change Shape Round; #set vias round
-Change Drill 0.3mm; #set default via drill
-Change Diameter 0.5mm; #Make default via diameter
-Change Width 10; #Routing width default to 10mil
-
-
-
-############## LIBRARY EDITOR specific Instructions ##############
 LBR:
-GRID mil 25 off; #GRID lines off
-GRID alt mil 1;
+MENU '[bin/designlink.svg] Search and order : Run designlink-order.ulp -general;'\
+     '[bin/pads-pcb.svg] PADS package import : RUN import-pads-powerpcb-v5;' \
+;
+SCRIPT OpenBOM;
 
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Delete';
-
-#add layers
-LAYER 135 INFO_1;
-LAYER 136 INFO_2;
-LAYER 137 INFO_3;
-LAYER 138 INFO_4;
-LAYER 139 INFO_5;
-LAYER 140 INFO_6;
-LAYER 141 INFO_7;
-LAYER 142 INFO_8;
-
-SET COLOR_LAYER 135 49; #Light black color from white palette
-SET COLOR_LAYER 136 9;  #Purple color from white palette
-SET COLOR_LAYER 137 1;  #Blue color from white palette
-SET COLOR_LAYER 138 23; #Orange color from white palette
-SET COLOR_LAYER 139 14; #Yellow color from white palette
-SET COLOR_LAYER 140 12; #Red color from white palette
-SET COLOR_LAYER 141 13; #Pink color from white palette
-SET COLOR_LAYER 142 19; #Green color from white palette
-
-
-
-############## DEVICE EDITOR specific Instructions ##############
 DEV:
-GRID mil 5 on;
-GRID alt mil 12.5;
+Grid Default;
+MENU '[bin/designlink.svg] Search and order : Run designlink-order.ulp -general;' \
+     '[bin/pads-pcb.svg] PADS package import : RUN import-pads-powerpcb-v5;'\
+;
 
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Delete';
-
-#add layers
-LAYER 135 INFO_1;
-LAYER 136 INFO_2;
-LAYER 137 INFO_3;
-LAYER 138 INFO_4;
-LAYER 139 INFO_5;
-LAYER 140 INFO_6;
-LAYER 141 INFO_7;
-LAYER 142 INFO_8;
-
-SET COLOR_LAYER 135 49; #Light black color from white palette
-SET COLOR_LAYER 136 9;  #Purple color from white palette
-SET COLOR_LAYER 137 1;  #Blue color from white palette
-SET COLOR_LAYER 138 23; #Orange color from white palette
-SET COLOR_LAYER 139 14; #Yellow color from white palette
-SET COLOR_LAYER 140 12; #Red color from white palette
-SET COLOR_LAYER 141 13; #Pink color from white palette
-SET COLOR_LAYER 142 19; #Green color from white palette
-
-
-############## SYMBOL EDITOR specific Instructions ##############
 SYM:
-GRID mil 25 on;
-GRID alt mil 12.5;
+Grid Default On;
+Change Width 0.010in;
 
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Delete';
-
-#add layers
-LAYER 135 INFO_1;
-LAYER 136 INFO_2;
-LAYER 137 INFO_3;
-LAYER 138 INFO_4;
-LAYER 139 INFO_5;
-LAYER 140 INFO_6;
-LAYER 141 INFO_7;
-LAYER 142 INFO_8;
-
-SET COLOR_LAYER 135 49; #Light black color from white palette
-SET COLOR_LAYER 136 9;  #Purple color from white palette
-SET COLOR_LAYER 137 1;  #Blue color from white palette
-SET COLOR_LAYER 138 23; #Orange color from white palette
-SET COLOR_LAYER 139 14; #Yellow color from white palette
-SET COLOR_LAYER 140 12; #Red color from white palette
-SET COLOR_LAYER 141 13; #Pink color from white palette
-SET COLOR_LAYER 142 19; #Green color from white palette
-
-
-############## PACKAGE EDITOR specific Instructions ##############
 PAC:
-GRID mil 5 on;
-GRID alt mil 1;
-
-ASSIGN F1 'Group';
-ASSIGN F2 'Move';
-ASSIGN F3 'Delete';
-
-SET COLOR_LAYER 21 16; #tPlace 
-SET COLOR_LAYER 22 40; #bPlace
-SET COLOR_LAYER 51 23; #tDocu
-SET COLOR_LAYER 52 47; #bDocu
-
-
-#add layers
-LAYER 135 INFO_1;
-LAYER 136 INFO_2;
-LAYER 137 INFO_3;
-LAYER 138 INFO_4;
-LAYER 139 INFO_5;
-LAYER 140 INFO_6;
-LAYER 141 INFO_7;
-LAYER 142 INFO_8;
-
-SET COLOR_LAYER 135 49; #Light black color from white palette
-SET COLOR_LAYER 136 9;  #Purple color from white palette
-SET COLOR_LAYER 137 1;  #Blue color from white palette
-SET COLOR_LAYER 138 23; #Orange color from white palette
-SET COLOR_LAYER 139 14; #Yellow color from white palette
-SET COLOR_LAYER 140 12; #Red color from white palette
-SET COLOR_LAYER 141 13; #Pink color from white palette
-SET COLOR_LAYER 142 19; #Green color from white palette
-
-DISPLAY ALL
+Grid Default On;
+Change Width 0.005in;
+Change Size 0.050in;
+MENU '[bin/pads-pcb.svg] PADS package import : RUN import-pads-powerpcb-v5;' \
+     ;

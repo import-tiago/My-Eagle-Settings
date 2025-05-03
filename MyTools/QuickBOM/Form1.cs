@@ -110,7 +110,7 @@ namespace EagleBOM {
 
                     if (checkBox1.Checked) {
                         // Header block
-                       
+
 
                         if (attrs.TryGetValue("COMPANY", out var company)) {
                             ws.Cell(row, 1).Value = "COMPANY";
@@ -295,7 +295,7 @@ namespace EagleBOM {
                     Package = g.Select(x => x.Package).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Value = g.Select(x => x.Value).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Quantity = g.Count(),
-                    Designators = string.Join(", ", g.Select(p => p.Designator).OrderBy(d => Regex.Match(d, @"\D+").Value).ThenBy(d => int.TryParse(Regex.Match(d, @"\d+").Value, out var n) ? n : 0))
+                    Designators = string.Join(", ", g.Select(p => p.Designator).OrderBy(d => Regex.Replace(d, @"\d+", m => m.Value.PadLeft(10, '0'))))
                 })
                 .ToList();
 

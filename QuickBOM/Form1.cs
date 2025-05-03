@@ -95,7 +95,7 @@ namespace EagleBOM {
 
             if (saveDialog.ShowDialog() == DialogResult.OK) {
                 string path = saveDialog.FileName;
-
+                Cursor.Current = Cursors.WaitCursor;
                 try {
                     var doc = XDocument.Load(textBox1.Text);
                     var attrs = doc.Descendants("attribute")
@@ -163,15 +163,9 @@ namespace EagleBOM {
                     foreach (var part in _lastParsedBOM) {
                         row++;
 
-                        var sortedDesignators = string.Join(", ",
-                            part.Designators
-                                .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
-                        );
-
                         ws.Cell(row, 1).Value = part.Quantity;
                         ws.Cell(row, 2).Value = part.PN;
-                        ws.Cell(row, 3).Value = sortedDesignators;
+                        ws.Cell(row, 3).Value = part.Designators;
 
                         var dataRow = ws.Row(row);
                         dataRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -187,10 +181,13 @@ namespace EagleBOM {
 
                     workbook.SaveAs(path);
 
-                    MessageBox.Show("Excel exported successfully.");
+                    MessageBox.Show("Successfully!");
                 }
                 catch (Exception ex) {
                     MessageBox.Show("Error exporting: " + ex.Message);
+                }
+                finally {
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
@@ -295,15 +292,41 @@ namespace EagleBOM {
                     Package = g.Select(x => x.Package).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Value = g.Select(x => x.Value).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Quantity = g.Count(),
-                    Designators = string.Join(", ", g.Select(p => p.Designator).OrderBy(d => Regex.Replace(d, @"\d+", m => m.Value.PadLeft(10, '0'))))
+                    Designators = string.Join(", ", g.Select(p => p.Designator).OrderBy(d => d, new NaturalStringComparer()))
+
                 })
                 .ToList();
 
             return grouped;
         }
+    }
 
-        private void Form1_Load(object sender, EventArgs e) {
+    public class NaturalStringComparer : IComparer<string> {
+        private static readonly Regex _splitRegex = new(@"\d+|\D+", RegexOptions.Compiled);
 
+        public int Compare(string x, string y) {
+            var xParts = _splitRegex.Matches(x ?? "");
+            var yParts = _splitRegex.Matches(y ?? "");
+            int count = Math.Min(xParts.Count, yParts.Count);
+
+            for (int i = 0; i < count; i++) {
+                var xPart = xParts[i].Value;
+                var yPart = yParts[i].Value;
+
+                bool xIsNum = int.TryParse(xPart, out int xNum);
+                bool yIsNum = int.TryParse(yPart, out int yNum);
+
+                int cmp;
+                if (xIsNum && yIsNum)
+                    cmp = xNum.CompareTo(yNum);
+                else
+                    cmp = string.Compare(xPart, yPart, StringComparison.OrdinalIgnoreCase);
+
+                if (cmp != 0)
+                    return cmp;
+            }
+
+            return xParts.Count.CompareTo(yParts.Count);
         }
     }
 

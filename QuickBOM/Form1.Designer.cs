@@ -167,8 +167,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Autodesk Eagle - Bill of Materials (BoM) Generator v1.2";
-            Load += Form1_Load;
+            Text = "Autodesk Eagle - Bill of Materials (BoM) Generator v1.3";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             ResumeLayout(false);

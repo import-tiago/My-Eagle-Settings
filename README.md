@@ -75,7 +75,7 @@ To include your **project information** in the exported Excel file, make sure to
 
 You can find the latest version in the [Releases](https://github.com/import-tiago/My-Eagle-Settings/releases) section.
 
-> Just download `QuickBOM.rar` and run — no installation needed.
+> Just download `QuickBOM vX.Y.zip` and run — no installation needed.
 
 ---
 

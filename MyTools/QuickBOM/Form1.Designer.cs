@@ -37,6 +37,7 @@
             textBox3 = new TextBox();
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -60,7 +61,7 @@
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(678, 23);
             textBox2.TabIndex = 3;
-            textBox2.Text = "SUPPLY, FRAME, LOGO,";
+            textBox2.Text = "SUPPLY, FRAME, LOGO, TP";
             // 
             // textBox1
             // 
@@ -137,11 +138,24 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Bill of Materials";
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Checked = true;
+            checkBox1.CheckState = CheckState.Checked;
+            checkBox1.Location = new Point(94, 99);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(172, 19);
+            checkBox1.TabIndex = 9;
+            checkBox1.Text = "Include project info in BOM";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(784, 761);
+            Controls.Add(checkBox1);
             Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(textBox3);
@@ -153,7 +167,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Autodesk Eagle - Bill of Materials (BoM) Generator";
+            Text = "Autodesk Eagle - Bill of Materials (BoM) Generator v1.1";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
@@ -172,5 +186,6 @@
         private TextBox textBox3;
         private DataGridView dataGridView1;
         private GroupBox groupBox1;
+        private CheckBox checkBox1;
     }
 }

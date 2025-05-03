@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -105,43 +106,47 @@ namespace EagleBOM {
                     using var workbook = new ClosedXML.Excel.XLWorkbook();
                     var ws = workbook.Worksheets.Add("BOM");
 
-                    // Header block
                     int row = 1;
 
-                    if (attrs.TryGetValue("COMPANY", out var company)) {
-                        ws.Cell(row, 1).Value = "COMPANY";
+                    if (checkBox1.Checked) {
+                        // Header block
+                       
+
+                        if (attrs.TryGetValue("COMPANY", out var company)) {
+                            ws.Cell(row, 1).Value = "COMPANY";
+                            ws.Cell(row, 1).Style.Font.Bold = true;
+                            ws.Cell(row++, 2).Value = company;
+                        }
+
+                        if (attrs.TryGetValue("PROJECT", out var project)) {
+                            ws.Cell(row, 1).Value = "PROJECT";
+                            ws.Cell(row, 1).Style.Font.Bold = true;
+                            ws.Cell(row++, 2).Value = project;
+                        }
+
+                        if (attrs.TryGetValue("VERSION", out var version)) {
+                            ws.Cell(row, 1).Value = "VERSION";
+                            ws.Cell(row, 1).Style.Font.Bold = true;
+                            ws.Cell(row++, 2).Value = version;
+                        }
+
+                        // BOM Summary
+                        int uniqueParts = _lastParsedBOM.Count;
+                        int totalQuantity = _lastParsedBOM.Sum(p => p.Quantity);
+
+                        ws.Cell(row, 1).Value = "UNIQUE PART NUMBERS";
                         ws.Cell(row, 1).Style.Font.Bold = true;
-                        ws.Cell(row++, 2).Value = company;
-                    }
+                        ws.Cell(row++, 2).Value = uniqueParts;
 
-                    if (attrs.TryGetValue("PROJECT", out var project)) {
-                        ws.Cell(row, 1).Value = "PROJECT";
+                        ws.Cell(row, 1).Value = "TOTAL QUANTITY OF PARTS";
                         ws.Cell(row, 1).Style.Font.Bold = true;
-                        ws.Cell(row++, 2).Value = project;
+                        ws.Cell(row++, 2).Value = totalQuantity;
+
+                        // Align all values to left
+                        ws.Column(2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+
+                        row++; // empty line before table
                     }
-
-                    if (attrs.TryGetValue("VERSION", out var version)) {
-                        ws.Cell(row, 1).Value = "VERSION";
-                        ws.Cell(row, 1).Style.Font.Bold = true;
-                        ws.Cell(row++, 2).Value = version;
-                    }
-
-                    // BOM Summary
-                    int uniqueParts = _lastParsedBOM.Count;
-                    int totalQuantity = _lastParsedBOM.Sum(p => p.Quantity);
-
-                    ws.Cell(row, 1).Value = "UNIQUE PART NUMBERS";
-                    ws.Cell(row, 1).Style.Font.Bold = true;
-                    ws.Cell(row++, 2).Value = uniqueParts;
-
-                    ws.Cell(row, 1).Value = "TOTAL QUANTITY OF PARTS";
-                    ws.Cell(row, 1).Style.Font.Bold = true;
-                    ws.Cell(row++, 2).Value = totalQuantity;
-
-                    // Align all values to left
-                    ws.Column(2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-
-                    row++; // empty line before table
 
                     // Table headers
                     ws.Cell(row, 1).Value = "QTD";
@@ -157,15 +162,21 @@ namespace EagleBOM {
                     // Data rows
                     foreach (var part in _lastParsedBOM) {
                         row++;
+
+                        var sortedDesignators = string.Join(", ",
+                            part.Designators
+                                .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
+                        );
+
                         ws.Cell(row, 1).Value = part.Quantity;
                         ws.Cell(row, 2).Value = part.PN;
-                        ws.Cell(row, 3).Value = part.Designators;
-                        //ws.Cell(row, 4).Value = part.Description;
-                        //ws.Cell(row, 5).Value = part.Package;
-                        //ws.Cell(row, 6).Value = part.Value;
+                        ws.Cell(row, 3).Value = sortedDesignators;
+
                         var dataRow = ws.Row(row);
                         dataRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     }
+
 
                     ws.Columns().AdjustToContents();
 
@@ -284,7 +295,7 @@ namespace EagleBOM {
                     Package = g.Select(x => x.Package).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Value = g.Select(x => x.Value).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? "",
                     Quantity = g.Count(),
-                    Designators = string.Join(", ", g.Select(p => p.Designator))
+                    Designators = string.Join(", ", g.Select(p => p.Designator).OrderBy(d => Regex.Match(d, @"\D+").Value).ThenBy(d => int.TryParse(Regex.Match(d, @"\d+").Value, out var n) ? n : 0))
                 })
                 .ToList();
 
